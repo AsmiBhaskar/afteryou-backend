@@ -73,7 +73,12 @@ class QStashService:
                 body=json.dumps(payload or {}),
                 headers={"Content-Type": "application/json"}
             )
-            schedule_id = response.get('scheduleId')
+            # Handle different response formats
+            if isinstance(response, dict):
+                schedule_id = response.get('scheduleId') or response.get('schedule_id') or str(response)
+            else:
+                schedule_id = str(response)  # Response might be the schedule ID directly
+            
             print(f"✓ Recurring task '{task_name}' scheduled with cron: {cron_expression}. Schedule ID: {schedule_id}")
             return schedule_id
         except Exception as e:
