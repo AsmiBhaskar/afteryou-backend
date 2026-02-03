@@ -1,0 +1,357 @@
+{% extends 'legacy/base.html' %}
+
+{% block title %}Dashboard - AfterYou{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-tachometer-alt"></i> Legacy Messages Dashboard</h2>
+            <a href="{% url 'legacy:create_message' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create New Message
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_count }}</h4>
+                        <p class="mb-0">Total Messages</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-envelope fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ created_count }}</h4>
+                        <p class="mb-0">Created ✅</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-plus-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ scheduled_count }}</h4>
+                        <p class="mb-0">Scheduled ⏰</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ sent_count }}</h4>
+                        <p class="mb-0">Sent 📤</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ failed_count }}</h4>
+                        <p class="mb-0">Failed ❌</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Row -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </h6>
+                <div class="btn-group" role="group">
+                    <a href="{% url 'legacy:create_message' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Message
+                    </a>
+                    <a href="{% url 'legacy:test_email' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-envelope"></i> Test Email
+                    </a>
+                    <button type="button" class="btn btn-outline-info" onclick="refreshPage()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Messages List -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Your Legacy Messages</h5>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Recipient</th>
+                                    <th>Delivery Date</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for message in messages %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'legacy:message_detail' message.id %}" class="text-decoration-none">
+                                            {{ message.title|truncatechars:50 }}
+                                        </a>
+                                    </td>
+                                    <td>{{ message.recipient_email }}</td>
+                                    <td>{{ message.delivery_date|date:"M d, Y H:i" }}</td>
+                                    <td>
+                                        {% if message.status == 'created' %}
+                                            <span class="badge bg-warning">Created ✅</span>
+                                        {% elif message.status == 'scheduled' %}
+                                            <span class="badge bg-primary">Scheduled ⏰</span>
+                                        {% elif message.status == 'sent' %}
+                                            <span class="badge bg-success">Sent 📤</span>
+                                        {% elif message.status == 'failed' %}
+                                            <span class="badge bg-danger">Failed ❌</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ message.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'legacy:message_detail' message.id %}" 
+                                               class="btn btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if message.status == 'created' %}
+                                                <button type="button" class="btn btn-outline-success" 
+                                                        onclick="scheduleMessage('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Schedule">
+                                                    <i class="fas fa-clock"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-warning" 
+                                                        onclick="sendMessageNow('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Send Now">
+                                                    <i class="fas fa-paper-plane"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        onclick="confirmDelete('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            {% elif message.status == 'failed' %}
+                                                <button type="button" class="btn btn-outline-warning" 
+                                                        onclick="sendMessageNow('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Retry Send">
+                                                    <i class="fas fa-redo"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        onclick="confirmDelete('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            {% elif message.status == 'scheduled' %}
+                                                <button type="button" class="btn btn-outline-warning" 
+                                                        onclick="sendMessageNow('{{ message.id }}', '{{ message.title }}')" 
+                                                        title="Send Now">
+                                                    <i class="fas fa-paper-plane"></i>
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    {% if messages.has_other_pages %}
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            {% if messages.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ messages.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in messages.paginator.page_range %}
+                                {% if messages.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if messages.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ messages.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-envelope-open fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No legacy messages yet</h5>
+                        <p class="text-muted">Create your first legacy message to get started.</p>
+                        <a href="{% url 'legacy:create_message' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Your First Message
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the message "<span id="messageTitle"></span>"?</p>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(messageId, messageTitle) {
+    document.getElementById('messageTitle').textContent = messageTitle;
+    document.getElementById('deleteForm').action = `/message/${messageId}/delete/`;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+function scheduleMessage(messageId, messageTitle) {
+    if (confirm(`Schedule "${messageTitle}" for delivery?`)) {
+        fetch(`/message/${messageId}/schedule/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showAlert('danger', data.error);
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'An error occurred while scheduling the message.');
+        });
+    }
+}
+
+function sendMessageNow(messageId, messageTitle) {
+    if (confirm(`Send "${messageTitle}" immediately?`)) {
+        fetch(`/message/${messageId}/send-now/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showAlert('danger', data.error);
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'An error occurred while sending the message.');
+        });
+    }
+}
+
+function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    const container = document.querySelector('.container');
+    container.insertBefore(alertDiv, container.firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
+}
+
+function refreshPage() {
+    location.reload();
+}
+</script>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+{% endblock %}

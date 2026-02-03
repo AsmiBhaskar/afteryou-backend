@@ -1,0 +1,85 @@
+{% extends 'legacy/base.html' %}
+
+{% block title %}Test Email - AfterYou{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-flask"></i> Test Email System
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">
+                    Test the email delivery system by sending a test message to your email address.
+                </p>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>What this test does:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Creates a test legacy message</li>
+                        <li>Sends it immediately to your registered email: <strong>{{ user.email }}</strong></li>
+                        <li>Verifies the email templates and delivery system</li>
+                        <li>Checks that all email formatting is working correctly</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> 
+                    {% if 'console' in EMAIL_BACKEND %}
+                        Currently using console email backend. Check your terminal/console for the email output.
+                    {% else %}
+                        Make sure your email settings are configured correctly in settings.py
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'legacy:dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-info">
+                            <i class="fas fa-paper-plane"></i> Send Test Email
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Configuration Info -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-cog"></i> Email Configuration Info
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Current Settings:</h6>
+                        <ul class="small">
+                            <li><strong>Backend:</strong> Console (Development)</li>
+                            <li><strong>Your Email:</strong> {{ user.email }}</li>
+                            <li><strong>From Email:</strong> AfterYou Legacy</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>For Production:</h6>
+                        <ul class="small">
+                            <li>Configure SMTP settings</li>
+                            <li>Use real email backend</li>
+                            <li>Set up proper authentication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

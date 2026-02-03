@@ -1,0 +1,136 @@
+{% extends 'legacy/base.html' %}
+
+{% block title %}Create Message - AfterYou{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">
+                    <i class="fas fa-plus-circle"></i> Create New Legacy Message
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">
+                            Message Title <span class="text-danger">*</span>
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">
+                            Message Content
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.content.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            Write the message you want to be delivered. This could be final words, 
+                            important information, or anything you want your recipient to receive.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.recipient_email.id_for_label }}" class="form-label">
+                            Recipient Email <span class="text-danger">*</span>
+                        </label>
+                        {{ form.recipient_email }}
+                        {% if form.recipient_email.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.recipient_email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            The email address where this message will be delivered.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.delivery_date.id_for_label }}" class="form-label">
+                            Delivery Date <span class="text-danger">*</span>
+                        </label>
+                        {{ form.delivery_date }}
+                        {% if form.delivery_date.errors %}
+                            <div class="text-danger small">
+                                {% for error in form.delivery_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            {{ form.delivery_date.help_text }}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Important:</strong> Once created, your message will be stored securely 
+                        and scheduled for delivery on the specified date. Make sure all information is correct.
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'legacy:dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Section -->
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-eye"></i> Preview Guidelines
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>✅ Good Examples:</h6>
+                        <ul class="small">
+                            <li>"Final Words to My Family"</li>
+                            <li>"Important Account Information"</li>
+                            <li>"Thank You Message to Friends"</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>⚠️ Security Tips:</h6>
+                        <ul class="small">
+                            <li>Double-check recipient email</li>
+                            <li>Choose a future delivery date</li>
+                            <li>Keep sensitive info secure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

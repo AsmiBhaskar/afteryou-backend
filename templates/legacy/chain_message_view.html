@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ message.title }} - Legacy Chain</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line        // View full chain
+        async function viewFullChain() {
+            if (!token) {
+                console.error('No token available');
+                return;
+            }
+            
+            const historyDiv = document.getElementById('chainHistory');
+            const messagesDiv = document.getElementById('chainMessages');
+            
+            try {
+                const apiUrl = `/api/message/${token}/chain/`;
+                console.log('Fetching chain:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                console.log('Chain response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json(); 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #9C27B0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .title {
+            color: #9C27B0;
+            font-size: 32px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .subtitle {
+            color: #666;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .chain-info {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #9C27B0;
+        }
+        .content {
+            font-size: 18px;
+            line-height: 1.8;
+            margin: 30px 0;
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .action-buttons {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background-color: #9C27B0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #7B1FA2;
+        }
+        .btn-secondary {
+            background-color: #6B73FF;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5A6AFF;
+        }
+        .btn-outline {
+            border: 2px solid #9C27B0;
+            color: #9C27B0;
+            background: transparent;
+        }
+        .btn-outline:hover {
+            background-color: #9C27B0;
+            color: white;
+        }
+        .extend-form {
+            background: #f0f2ff;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            display: none;
+        }
+        .extend-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #9C27B0;
+        }
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .chain-history {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+        .chain-message {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+        .chain-message.current {
+            border-left-color: #9C27B0;
+            background: #f3e5f5;
+        }
+        .generation-badge {
+            background: #9C27B0;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #388e3c;
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title" id="messageTitle">Loading...</h1>
+            <p class="subtitle">Legacy Chain Message</p>
+        </div>
+        
+        <div class="chain-info" id="chainInfo" style="display: none;">
+            <strong>🔗 Generation <span id="generation">1</span> of a Legacy Chain</strong><br>
+            <small>Added by: <span id="senderName">Unknown</span></small>
+        </div>
+        
+        <div class="content" id="messageContent">
+            Loading message...
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="toggleExtendForm()">
+                Add Your Message & Pass It Forward
+            </button>
+            <button class="btn btn-outline" onclick="viewFullChain()">
+                View Full Chain History
+            </button>
+        </div>
+        
+        <form class="extend-form" id="extendForm" onsubmit="submitExtension(event)">
+            <h3>Add Your Message to the Legacy Chain</h3>
+            <div id="extendError" class="error" style="display: none;"></div>
+            <div id="extendSuccess" class="success" style="display: none;"></div>
+            
+            <div class="form-group">
+                <label for="senderName">Your Name:</label>
+                <input type="text" id="senderNameInput" name="sender_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="recipientEmail">Next Recipient's Email:</label>
+                <input type="email" id="recipientEmail" name="recipient_email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Your Message:</label>
+                <textarea id="contentInput" name="content" placeholder="Add your thoughts, memories, or wisdom to this legacy..." required></textarea>
+            </div>
+            
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-primary">Add Message & Send Forward</button>
+                <button type="button" class="btn btn-outline" onclick="toggleExtendForm()">Cancel</button>
+            </div>
+        </form>
+        
+        <div class="chain-history" id="chainHistory" style="display: none;">
+            <h3>Legacy Chain History</h3>
+            <div id="chainMessages"></div>
+        </div>
+    </div>
+
+    <script>
+        // Get token from URL - handle /legacy/message/token/ pattern
+        const path = window.location.pathname;
+        console.log('Full path:', path);
+        
+        // Match pattern /legacy/message/uuid/
+        const tokenMatch = path.match(/\/legacy\/message\/([a-f0-9-]{36})\/?/);
+        const token = tokenMatch ? tokenMatch[1] : null;
+        
+        console.log('Extracted token:', token);
+        
+        if (!token) {
+            document.getElementById('messageTitle').textContent = 'Invalid URL';
+            document.getElementById('messageContent').textContent = 'Could not extract message token from URL';
+            return;
+        }
+        
+        // Load message data
+        async function loadMessage() {
+            try {
+                const apiUrl = `/api/message/${token}/`;
+                console.log('Fetching:', apiUrl);
+                
+                const response = await fetch(apiUrl);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    document.getElementById('messageTitle').textContent = 'Error';
+                    document.getElementById('messageContent').textContent = data.error;
+                    return;
+                }
+                
+                const message = data.message;
+                document.getElementById('messageTitle').textContent = message.title;
+                document.getElementById('messageContent').textContent = message.content;
+                
+                if (message.generation > 1) {
+                    document.getElementById('chainInfo').style.display = 'block';
+                    document.getElementById('generation').textContent = message.generation;
+                    document.getElementById('senderName').textContent = message.sender_name || 'Anonymous';
+                }
+                
+            } catch (error) {
+                console.error('Error loading message:', error);
+                document.getElementById('messageTitle').textContent = 'Error';
+                document.getElementById('messageContent').textContent = 'Failed to load message';
+            }
+        }
+        
+        // Toggle extend form
+        function toggleExtendForm() {
+            const form = document.getElementById('extendForm');
+            form.classList.toggle('active');
+        }
+        
+        // Submit extension
+        async function submitExtension(event) {
+            event.preventDefault();
+            
+            if (!token) {
+                console.error('No token available');
+                return;
+            }
+            
+            const errorDiv = document.getElementById('extendError');
+            const successDiv = document.getElementById('extendSuccess');
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            const formData = {
+                sender_name: document.getElementById('senderNameInput').value,
+                recipient_email: document.getElementById('recipientEmail').value,
+                content: document.getElementById('contentInput').value
+            };
+            
+            try {
+                const apiUrl = `/api/message/${token}/extend/`;
+                console.log('Submitting to:', apiUrl);
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('Extend response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    successDiv.textContent = 'Your message has been added to the legacy chain and sent forward!';
+                    successDiv.style.display = 'block';
+                    document.getElementById('extendForm').reset();
+                    setTimeout(() => {
+                        toggleExtendForm();
+                    }, 2000);
+                } else {
+                    errorDiv.textContent = result.error || 'Failed to send message';
+                    errorDiv.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error submitting extension:', error);
+                errorDiv.textContent = 'Network error occurred';
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // View full chain
+        async function viewFullChain() {
+            const historyDiv = document.getElementById('chainHistory');
+            const messagesDiv = document.getElementById('chainMessages');
+            
+            try {
+                const response = await fetch(`/api/message/${token}/chain/`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    messagesDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                    historyDiv.style.display = 'block';
+                    return;
+                }
+                
+                messagesDiv.innerHTML = '';
+                data.chain.forEach(msg => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `chain-message ${msg.generation === data.current_generation ? 'current' : ''}`;
+                    messageDiv.innerHTML = `
+                        <div class="generation-badge">Generation ${msg.generation}</div>
+                        <h4>${msg.title}</h4>
+                        <p>${msg.content}</p>
+                        <small>From: ${msg.sender_name || 'Original Creator'} | ${new Date(msg.created_at).toLocaleDateString()}</small>
+                    `;
+                    messagesDiv.appendChild(messageDiv);
+                });
+                
+                historyDiv.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading chain:', error);
+                messagesDiv.innerHTML = '<p class="error">Failed to load chain history</p>';
+                historyDiv.style.display = 'block';
+            }
+        }
+        
+        // Load message on page load
+        loadMessage();
+    </script>
+</body>
+</html>

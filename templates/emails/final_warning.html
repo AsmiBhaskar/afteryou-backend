@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+        }
+        .urgent-box {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚨 FINAL WARNING</h1>
+        <p>Legacy Messages Will Be Delivered Soon</p>
+    </div>
+    
+    <div class="content">
+        <h2>Dear {{ user.first_name|default:user.username }},</h2>
+        
+        <div class="urgent-box">
+            <h3>⚠️ URGENT ACTION REQUIRED ⚠️</h3>
+            <p>Your legacy messages will begin delivery <strong>very soon</strong> unless you check in immediately.</p>
+        </div>
+        
+        <p>We sent you a check-in reminder recently, but we haven't heard from you. According to your account settings:</p>
+        
+        <ul>
+            <li>You have <strong>{{ message_count }} scheduled legacy messages</strong></li>
+            <li>These messages will be automatically delivered if you don't check in</li>
+            <li>This is your final opportunity to prevent automatic delivery</li>
+        </ul>
+        
+        <p><strong>What you need to do RIGHT NOW:</strong></p>
+        
+        <a href="{{ check_in_url }}" class="button">CHECK IN IMMEDIATELY</a>
+        
+        <p>If you check in now, your messages will remain safely scheduled according to your original timeline. If you don't check in, the delivery process will begin automatically as part of your account's dead man's switch feature.</p>
+        
+        <div class="urgent-box">
+            <p><strong>This is your final notification.</strong><br>
+            After this grace period expires, your legacy messages will be delivered without further warning.</p>
+        </div>
+        
+        <p>If you're receiving this message and you're still active, please log in immediately to reset your account status.</p>
+        
+        <p>If you have any questions or concerns, contact our support team urgently.</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated final warning from AfterYou Legacy Message System.<br>
+        <strong>Time-sensitive:</strong> Please act immediately to prevent message delivery.</p>
+    </div>
+</body>
+</html>

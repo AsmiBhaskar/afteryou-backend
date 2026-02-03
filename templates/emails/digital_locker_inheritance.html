@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .otp-section {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+        }
+        .otp-code {
+            font-size: 36px;
+            font-weight: bold;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 15px 0;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning-box {
+            background: #fef3e2;
+            border-left: 4px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .credentials-summary {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .security-notice {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .steps {
+            counter-reset: step-counter;
+        }
+        .step {
+            counter-increment: step-counter;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 50px;
+        }
+        .step:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: #3498db;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Digital Legacy Access</h1>
+            <p>Secure Credential Inheritance</p>
+        </div>
+        
+        <div class="content">
+            <h2>Dear {{ inheritor_name }},</h2>
+            
+            <p>You have been designated as the inheritor of <strong>{{ deceased_name }}'s</strong> Digital Legacy Locker. This secure vault contains important digital credentials and access information that they wanted to pass on to you.</p>
+            
+            <div class="credentials-summary">
+                <h3>📦 Vault Contents</h3>
+                <p><strong>{{ credential_count }}</strong> secured digital credentials including:</p>
+                <ul>
+                    <li>Email accounts and passwords</li>
+                    <li>Banking and financial access</li>
+                    <li>Social media accounts</li>
+                    <li>Cloud storage and services</li>
+                    <li>And other important digital assets</li>
+                </ul>
+            </div>
+            
+            <div class="otp-section">
+                <h3>🔑 Your Access Code</h3>
+                <p>Use this one-time password to access the vault:</p>
+                <div class="otp-code">{{ otp_token }}</div>
+                <p><strong>Valid for {{ expires_hours }} hours only</strong></p>
+            </div>
+            
+            <div class="info-box">
+                <h4>📋 Instructions for Access</h4>
+                <div class="steps">
+                    <div class="step">
+                        <strong>Visit the Access Portal</strong><br>
+                        Go to the secure access link provided below
+                    </div>
+                    <div class="step">
+                        <strong>Enter Your Access Code</strong><br>
+                        Use the 8-digit code shown above
+                    </div>
+                    <div class="step">
+                        <strong>View & Export Credentials</strong><br>
+                        Access all stored credentials and download if needed
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ access_url }}" class="button">
+                    🔓 Access Digital Locker
+                </a>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Important Security Information</h4>
+                <ul>
+                    <li><strong>One-time access:</strong> This code can only be used once</li>
+                    <li><strong>Time-limited:</strong> Access expires in {{ expires_hours }} hours</li>
+                    <li><strong>Limited attempts:</strong> Multiple failed attempts will lock the vault</li>
+                    <li><strong>Secure connection:</strong> Only access from a trusted device</li>
+                </ul>
+            </div>
+            
+            <div class="security-notice">
+                <h4>🛡️ Privacy & Security</h4>
+                <p>All credentials are encrypted and stored securely. Access is logged for security purposes. Please handle this information with the utmost care and respect for {{ deceased_name }}'s digital privacy.</p>
+            </div>
+            
+            {% if locker.description %}
+            <div class="info-box">
+                <h4>💬 Personal Message</h4>
+                <p><em>"{{ locker.description }}"</em></p>
+                <p style="text-align: right;">- {{ deceased_name }}</p>
+            </div>
+            {% endif %}
+            
+            <p>If you have any questions about this process or encounter technical issues, please contact our support team immediately.</p>
+            
+            <p>With respect and condolences,<br>
+            The AfterYou Digital Legacy Team</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>AfterYou Digital Legacy Platform</strong></p>
+            <p>Secure • Private • Trusted</p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

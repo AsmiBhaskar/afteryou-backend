@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Message: {{ message.title }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2D3436;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #FAFBFF 0%, #F0F2FF 100%);
+        }
+        .container {
+            background: white;
+            padding: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(107, 115, 255, 0.12);
+            border: 1px solid rgba(107, 115, 255, 0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(45deg, #6B73FF 30%, #FF6B9D 90%);
+            color: white;
+            text-align: center;
+            padding: 40px 30px;
+        }
+        .title {
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .subtitle {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        .content-wrapper {
+            padding: 40px 30px;
+        }
+        .message-content {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            white-space: pre-wrap;
+            color: #2D3436;
+        }
+        .date-info {
+            background: linear-gradient(135deg, #E8EAFF 0%, #F0F2FF 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid #6B73FF;
+        }
+        .date-info strong {
+            color: #3F47CC;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .date-info .date {
+            color: #636E72;
+            font-size: 16px;
+        }
+        .footer {
+            background: #FAFBFF;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #F1F3F4;
+        }
+        .footer-text {
+            font-size: 14px;
+            color: #636E72;
+            margin: 0;
+            line-height: 1.6;
+        }
+        .brand {
+            background: linear-gradient(45deg, #6B73FF 30%, #FF6B9D 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(45deg, #6B73FF 30%, #FF6B9D 90%);
+            margin: 30px 0;
+            border-radius: 1px;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .title {
+                font-size: 28px;
+            }
+            .content-wrapper {
+                padding: 30px 20px;
+            }
+            .footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">{{ message.title }}</h1>
+            <p class="subtitle">A Legacy Message from AfterYou</p>
+        </div>
+        
+        <div class="content-wrapper">
+            <div class="message-content">{{ message.content }}</div>
+            
+            <div class="divider"></div>
+            
+            <div class="date-info">
+                <strong>Originally scheduled for delivery:</strong>
+                <div class="date">{{ delivery_date|date:"F d, Y \a\t g:i A" }}</div>
+                
+                <strong style="margin-top: 15px;">Delivered on:</strong>
+                <div class="date">{{ sent_date|date:"F d, Y \a\t g:i A" }}</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">
+                This message was created and scheduled through <span class="brand">AfterYou</span> Legacy Messages.<br>
+                A service for connecting present moments with future hearts. 💌
+            </p>
+        </div>
+    </div>
+</body>
+</html>

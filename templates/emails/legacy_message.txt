@@ -1,0 +1,30 @@
+AfterYou Legacy Message: {{ message.title }}
+
+Dear Recipient,
+
+You have received a legacy message that was scheduled for delivery on {{ message.delivery_date|date:"F d, Y \a\t g:i A" }}.
+
+Message Details:
+- Title: {{ message.title }}
+- Originally written: {{ message.created_at|date:"F d, Y \a\t g:i A" }}
+- Scheduled for: {{ message.delivery_date|date:"F d, Y \a\t g:i A" }}
+- Delivered on: {{ current_time|date:"F d, Y \a\t g:i A" }}
+
+---
+
+{{ message.content }}
+
+---
+
+"I wrote this for the wind to carry,
+When my voice is ash and air.
+So you may find me, not in presence,
+But in the echo I once shared."
+
+This message was delivered by AfterYou Legacy System - a service that preserves words for the future.
+
+This is an automated message. Please do not reply to this email.
+If you believe you received this message in error, please contact support.
+
+With love and remembrance,
+The AfterYou Team

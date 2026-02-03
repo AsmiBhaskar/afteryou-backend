@@ -1,0 +1,254 @@
+{% extends 'legacy/base.html' %}
+
+{% block title %}{{ message.title }} - AfterYou{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <!-- Message Header -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-envelope"></i> {{ message.title }}
+                    </h4>
+                    <div>
+                        {% if message.status == 'created' %}
+                            <span class="badge bg-warning">Created ✅</span>
+                        {% elif message.status == 'scheduled' %}
+                            <span class="badge bg-info">Scheduled ⏰</span>
+                        {% elif message.status == 'sent' %}
+                            <span class="badge bg-success">Sent 📤</span>
+                        {% elif message.status == 'failed' %}
+                            <span class="badge bg-danger">Failed ❌</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-user"></i> Recipient:</h6>
+                        <p class="text-muted">{{ message.recipient_email }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-calendar"></i> Delivery Date:</h6>
+                        <p class="text-muted">{{ message.delivery_date|date:"F d, Y \a\t H:i" }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-clock"></i> Created:</h6>
+                        <p class="text-muted">{{ message.created_at|date:"F d, Y \a\t H:i" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-info-circle"></i> Status:</h6>
+                        <p class="text-muted">
+                            {% if message.status == 'created' %}
+                                Message created and waiting to be scheduled
+                            {% elif message.status == 'scheduled' %}
+                                Message scheduled for delivery
+                            {% elif message.status == 'sent' %}
+                                Message successfully delivered on {{ message.sent_at|date:"F d, Y \a\t H:i" }}
+                            {% elif message.status == 'failed' %}
+                                Message delivery failed - will retry
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Content -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-text"></i> Message Content
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if message.content %}
+                    <div class="message-content p-3 border rounded bg-light">
+                        {{ message.content|linebreaks }}
+                    </div>
+                {% else %}
+                    <p class="text-muted fst-italic">No content provided for this message.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Delivery Timeline -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-route"></i> Delivery Timeline
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker bg-success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Message Created</h6>
+                            <p class="text-muted small mb-0">{{ message.created_at|date:"F d, Y \a\t H:i" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item {% if message.status == 'scheduled' or message.status == 'sent' %}completed{% else %}pending{% endif %}">
+                        <div class="timeline-marker {% if message.status == 'scheduled' or message.status == 'sent' %}bg-primary{% else %}bg-secondary{% endif %}">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Scheduled for Delivery</h6>
+                            <p class="text-muted small mb-0">
+                                {% if message.status == 'scheduled' or message.status == 'sent' %}
+                                    Ready for delivery on {{ message.delivery_date|date:"F d, Y \a\t H:i" }}
+                                {% else %}
+                                    Will be scheduled closer to {{ message.delivery_date|date:"F d, Y" }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item {% if message.status == 'sent' %}completed{% else %}pending{% endif %}">
+                        <div class="timeline-marker {% if message.status == 'sent' %}bg-success{% else %}bg-secondary{% endif %}">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Message Delivered</h6>
+                            <p class="text-muted small mb-0">
+                                {% if message.status == 'sent' %}
+                                    Delivered on {{ message.sent_at|date:"F d, Y \a\t H:i" }}
+                                {% else %}
+                                    Pending delivery on {{ message.delivery_date|date:"F d, Y \a\t H:i" }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'legacy:dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    
+                    <div>
+                        {% if message.status == 'created' %}
+                            <button type="button" class="btn btn-outline-danger" 
+                                    onclick="confirmDelete('{{ message.id }}', '{{ message.title }}')">
+                                <i class="fas fa-trash"></i> Delete Message
+                            </button>
+                        {% endif %}
+                        
+                        {% if message.status == 'sent' %}
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-check-circle"></i> Successfully Delivered
+                            </span>
+                        {% elif message.status == 'failed' %}
+                            <button class="btn btn-warning">
+                                <i class="fas fa-redo"></i> Retry Delivery
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this message?</p>
+                <div class="alert alert-warning">
+                    <strong>Title:</strong> <span id="messageTitle"></span><br>
+                    <strong>Recipient:</strong> {{ message.recipient_email }}<br>
+                    <strong>Delivery:</strong> {{ message.delivery_date|date:"F d, Y" }}
+                </div>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 3rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -3rem;
+    top: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.timeline-content h6 {
+    margin-bottom: 0.25rem;
+}
+
+.timeline-item.completed .timeline-content h6 {
+    color: #198754;
+}
+
+.timeline-item.pending .timeline-content h6 {
+    color: #6c757d;
+}
+
+.message-content {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    font-size: 1.1rem;
+}
+</style>
+
+<script>
+function confirmDelete(messageId, messageTitle) {
+    document.getElementById('messageTitle').textContent = messageTitle;
+    document.getElementById('deleteForm').action = `/message/${messageId}/delete/`;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}
