@@ -6,7 +6,7 @@ import os
 import json
 from datetime import datetime, timedelta
 from decouple import config
-from upstash_qstash import QStash
+from qstash import QStash
 
 class QStashService:
     """Wrapper for QStash client with helper methods for task publishing."""
