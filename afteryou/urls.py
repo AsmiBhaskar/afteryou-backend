@@ -20,6 +20,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from . import task_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +32,10 @@ urlpatterns = [
     # JWT token endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # QStash task endpoints (serverless background tasks)
+    path('api/tasks/send_check_in_reminders/', task_views.send_check_in_reminders_task, name='qstash_check_in_reminders'),
+    path('api/tasks/process_scheduled_messages/', task_views.process_scheduled_messages_task, name='qstash_scheduled_messages'),
+    path('api/tasks/send_final_warnings/', task_views.send_final_warnings_task, name='qstash_final_warnings'),
+    path('api/tasks/process_inactive_users/', task_views.process_inactive_users_task, name='qstash_inactive_users'),
+    path('api/tasks/test/', task_views.test_task, name='qstash_test'),
 ]

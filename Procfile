@@ -1,3 +1,3 @@
 web: gunicorn afteryou.wsgi:application --bind 0.0.0.0:$PORT
-worker: celery -A afteryou worker --loglevel=info
-beat: celery -A afteryou beat --loglevel=info
+# Celery workers replaced with Upstash QStash (serverless, no worker process needed!)
+# QStash will make HTTP requests to /api/tasks/* endpoints on schedule
