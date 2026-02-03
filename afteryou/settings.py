@@ -191,19 +191,22 @@ SIMPLE_JWT = {
 }
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    origin.rstrip('/') for origin in config(
+        'CORS_ALLOWED_ORIGINS',
+        default='http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173'
+    ).split(',')
+]
 
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF Settings
-CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://localhost:5173,http://127.0.0.1:5173'
-).split(',')
-
+CSRF_TRUSTED_ORIGINS = [
+    origin.rstrip('/') for origin in config(
+        'CSRF_TRUSTED_ORIGINS',
+        default='http://localhost:5173,http://127.0.0.1:5173'
+    ).split(',')
+]
 # WebSocket Configuration
 ASGI_APPLICATION = 'afteryou.asgi.application'
 
