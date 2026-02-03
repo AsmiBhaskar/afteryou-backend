@@ -29,7 +29,16 @@ class Command(BaseCommand):
             try:
                 schedules = qstash.list_schedules()
                 for schedule in schedules:
-                    schedule_id = schedule.get('scheduleId')
+                    # Handle both dict and object responses
+                    if hasattr(schedule, 'schedule_id'):
+                        schedule_id = schedule.schedule_id
+                    elif hasattr(schedule, 'scheduleId'):
+                        schedule_id = schedule.scheduleId
+                    elif isinstance(schedule, dict):
+                        schedule_id = schedule.get('scheduleId') or schedule.get('schedule_id')
+                    else:
+                        schedule_id = str(schedule)
+                    
                     if schedule_id:
                         qstash.delete_schedule(schedule_id)
                         self.stdout.write(f'  Deleted schedule: {schedule_id}')
