@@ -48,8 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_rq',  # Django-RQ for background tasks
-    'django_celery_beat',  # Celery periodic tasks
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -312,50 +310,11 @@ LEGACY_MESSAGE_SETTINGS = {
 
 
 
-from urllib.parse import urlparse
-redis_url = urlparse(REDIS_URL)
-
-# Celery Configuration
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
-# SSL Configuration for Redis if using rediss://
-if REDIS_URL.startswith('rediss://'):
-    CELERY_BROKER_USE_SSL = {
-        'ssl_cert_reqs': ssl.CERT_NONE,  # Use ssl.CERT_NONE instead of string
-        'ssl_ca_certs': None,
-        'ssl_certfile': None,
-        'ssl_keyfile': None,
-    }
-    CELERY_REDIS_BACKEND_USE_SSL = {
-        'ssl_cert_reqs': ssl.CERT_NONE,
-        'ssl_ca_certs': None,
-        'ssl_certfile': None,
-        'ssl_keyfile': None,
-    }
-
-# Celery Beat (Periodic Tasks) Configuration
-try:
-    from celery.schedules import crontab
-    CELERY_BEAT_SCHEDULE = {
-        'check-dead-mans-switch': {
-            'task': 'accounts.tasks.check_dead_mans_switch',
-            'schedule': crontab(hour=9, minute=0),  # Run daily at 9 AM
-        },
-    }
-except ImportError:
-    # Fallback to interval schedule if crontab is not available
-    CELERY_BEAT_SCHEDULE = {
-        'check-dead-mans-switch': {
-            'task': 'accounts.tasks.check_dead_mans_switch',
-            'schedule': 60.0 * 60.0 * 24.0,  # Run daily (86400 seconds)
-        },
-    }
+# QStash Configuration (Serverless background tasks)
+QSTASH_TOKEN = config('QSTASH_TOKEN', default='')
+QSTASH_CURRENT_SIGNING_KEY = config('QSTASH_CURRENT_SIGNING_KEY', default='')
+QSTASH_NEXT_SIGNING_KEY = config('QSTASH_NEXT_SIGNING_KEY', default='')
+BACKEND_URL = config('BACKEND_URL', default='http://localhost:8000')
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
